@@ -111,6 +111,7 @@ class Transition:
                 stdout=PIPE,
                 stderr=STDOUT,
                 text=True,
+                timeout=300,
             )
             logger.debug("Transition config vcs cloned.")
         except CalledProcessError as e:
