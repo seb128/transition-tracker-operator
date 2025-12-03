@@ -11,6 +11,7 @@ dev = [
     "coverage[toml]",
     "pytest",
     "requests",
+    "jubilant",
     "ruff",
 ]
 

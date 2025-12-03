@@ -277,6 +277,18 @@ wheels = [
 ]
 
 [[package]]
+name = "jubilant"
+version = "1.6.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyyaml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b3/13/c38036a0b2d44bae765216f5f85d4feed8f1a254110b0d1df7158b7a35f0/jubilant-1.6.1.tar.gz", hash = "sha256:bb57dc215b1960d31716ef071ba6be121331991bbbbe3449257471f5e7795d06", size = 31998, upload-time = "2025-11-26T20:58:40.867Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e2/38/c054fa0b9de01d0b108f91f892c288bf99e68abd6593b55c2a8964de40f2/jubilant-1.6.1-py3-none-any.whl", hash = "sha256:a74ea1184eea43b9e8921dcad22ffeb14a238e91c9024f5d41fe2e210fd05be2", size = 33005, upload-time = "2025-11-26T20:58:39.566Z" },
+]
+
+[[package]]
 name = "opentelemetry-api"
 version = "1.38.0"
 source = { registry = "https://pypi.org/simple" }
@@ -666,6 +678,7 @@ dependencies = [
 [package.optional-dependencies]
 dev = [
     { name = "coverage", extra = ["toml"] },
+    { name = "jubilant" },
     { name = "ops", extra = ["testing"] },
     { name = "pytest" },
     { name = "requests" },
@@ -676,6 +689,7 @@ dev = [
 requires-dist = [
     { name = "charmlibs-apt", specifier = "~=1.0" },
     { name = "coverage", extras = ["toml"], marker = "extra == 'dev'" },
+    { name = "jubilant", marker = "extra == 'dev'" },
     { name = "ops" },
     { name = "ops", extras = ["testing"], marker = "extra == 'dev'" },
     { name = "pydantic" },
