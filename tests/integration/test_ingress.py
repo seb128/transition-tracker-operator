@@ -2,7 +2,6 @@
 # See LICENSE file for licensing details.
 
 import logging
-import sys
 
 import jubilant
 from requests import Session
@@ -16,10 +15,10 @@ def deploy_ha_wait_func(status):
     started = status.apps[APPNAME].app_status.message == "Starting transition"
     haproxy_active = status.apps[HAPROXY].is_active
     ssc_active = status.apps[SSC].is_active
-    logging.debug(f"{sys._getframe().f_code.co_name} - app_maintenance: {app_maintenance}")
-    logging.debug(f"{sys._getframe().f_code.co_name} - started: {started}")
-    logging.debug(f"{sys._getframe().f_code.co_name} - haproxy_active: {haproxy_active}")
-    logging.debug(f"{sys._getframe().f_code.co_name} - ssc_active: {ssc_active}")
+    logging.debug(f"app_maintenance: {app_maintenance}")
+    logging.debug(f"started: {started}")
+    logging.debug(f"haproxy_active: {haproxy_active}")
+    logging.debug(f"ssc_active: {ssc_active}")
     return app_maintenance and started and haproxy_active and ssc_active
 
 

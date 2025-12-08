@@ -2,7 +2,6 @@
 # See LICENSE file for licensing details.
 
 import logging
-import sys
 
 import jubilant
 import requests
@@ -15,8 +14,8 @@ def deploy_wait_func(status):
     all_maint = jubilant.all_maintenance(status)
     started = status.apps[APPNAME].app_status.message == "Starting transition"
     ready = (all_maint and started)
-    logging.debug(f"{sys._getframe().f_code.co_name} - all_maint: {all_maint}")
-    logging.debug(f"{sys._getframe().f_code.co_name} - started: {started}")
+    logging.debug(f"all_maint: {all_maint}")
+    logging.debug(f"started: {started}")
     return ready
 
 
