@@ -10,6 +10,8 @@ dev = [
     "ops[testing]",
     "coverage[toml]",
     "pytest",
+    "requests",
+    "jubilant",
     "ruff",
 ]
 

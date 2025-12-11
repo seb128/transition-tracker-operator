@@ -27,10 +27,21 @@ unit:
 		--source=$(SRC) \
 		-m pytest \
 		--tb native \
+		tests/unit \
 		-v \
 		-s \
 		$(ARGS)
 	uv run --all-extras coverage report
+
+integration:
+	uv run --all-extras \
+		-m pytest \
+		--tb native \
+		tests/integration \
+		-v \
+		-s \
+		--log-cli-level=INFO \
+		$(ARGS)
 
 clean:
 	rm -rf .coverage
