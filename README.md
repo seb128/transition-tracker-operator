@@ -1,9 +1,10 @@
 # Ubuntu Transition Tracker Operator
 
 
-**Ubuntu  Transition Tracker Operator** is a [charm](https://juju.is/charms-architecture) for deploying an Ubuntu transition tracker environment.
+**Ubuntu Transition Tracker Operator** is a [charm](https://juju.is/charms-architecture) for deploying an Ubuntu transition tracker environment.
 
-This reposistory contains the code for the charm, the application is coming from the `ben` package and the [configs repository](https://git.launchpad.net/~ubuntu-transition-trackers/ubuntu-transition-tracker/+git/configs).
+This repository contains the code for the charm, the application is coming from the `ben` package and the [configs repository](ht
+tps://git.launchpad.net/~ubuntu-transition-trackers/ubuntu-transition-tracker/+git/configs).
 
 ## Basic usage
 
@@ -16,7 +17,7 @@ Assuming you have access to a bootstrapped [Juju](https://juju.is) controller, y
 Once the charm is deployed, you can check the status with Juju status:
 
 ```bash
-❯ $ juju status
+❯ juju status
 Model        Controller  Cloud/Region         Version  SLA          Timestamp
 welcome-lxd  lxd         localhost/localhost  3.6.7    unsupported  13:29:50+02:00
 
@@ -35,7 +36,25 @@ On first start up, the charm will install the application and install a systemd 
 To refresh the report, you can use the provided Juju [Action](https://documentation.ubuntu.com/juju/3.6/howto/manage-actions/):
 
 ```bash
-❯ juju run ubuntu-transition-tracker/0 refresh"
+❯ juju run ubuntu-transition-tracker/0 refresh
+```
+
+## Integrating with an ingress / proxy
+
+The charm supports integrations with ingress/proxy services using the `ingress` relation. To test this:
+
+```bash
+# Deploy the charms
+❯ juju deploy ubuntu-transition-tracker
+❯ juju deploy haproxy --channel 2.8/edge --config external-hostname=transitions.internal
+❯ juju deploy self-signed-certificates --channel 1/edge
+
+# Create integrations
+❯ juju integrate ubuntu-transition-tracker haproxy
+❯ juju integrate haproxy:certificates self-signed-certificates:certificates
+
+# Test the proxy integration
+❯ curl -k -H "Host: transitions.internal" https://<haproxy-ip>/<model-name>-ubuntu-transition-tracker
 ```
 
 ## Testing
