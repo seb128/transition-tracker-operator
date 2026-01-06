@@ -1,8 +1,6 @@
 # Copyright 2025 Canonical
 # See LICENSE file for licensing details.
 
-import logging
-
 import jubilant
 from requests import Session
 
@@ -11,18 +9,18 @@ from . import APPNAME, HAPROXY, SSC, DNSResolverHTTPSAdapter, retry, wait_onesho
 
 def deploy_ha_wait_func(status):
     """Wait on juju status until deployed and started."""
-    app_maintenance = status.apps[APPNAME].is_maintenance
-    started = status.apps[APPNAME].app_status.message == "Starting transition"
-    haproxy_active = status.apps[HAPROXY].is_active
-    ssc_active = status.apps[SSC].is_active
-    logging.debug(f"app_maintenance: {app_maintenance}")
-    logging.debug(f"started: {started}")
-    logging.debug(f"haproxy_active: {haproxy_active}")
-    logging.debug(f"ssc_active: {ssc_active}")
-    return app_maintenance and started and haproxy_active and ssc_active
+    tracker = status.apps.get(APPNAME)
+    haproxy = status.apps.get(HAPROXY)
+    ssc = status.apps.get(SSC)
+
+    tracker_ready = tracker.app_status.current == "active"
+    haproxy_ready = haproxy.app_status.current == "active"
+    ssc_ready = ssc.app_status.current == "active"
+
+    return tracker_ready and haproxy_ready and ssc_ready
 
 
-def test_deploy(juju: jubilant.Juju, transition_tracker_charm):
+def test_ingress_deploy(juju: jubilant.Juju, transition_tracker_charm):
     """Deploy the charm along haproxy and wait until it fully completed."""
     juju.deploy(transition_tracker_charm, app=APPNAME)
     juju.deploy(
@@ -34,14 +32,15 @@ def test_deploy(juju: jubilant.Juju, transition_tracker_charm):
     juju.integrate(f"{HAPROXY}:certificates", f"{SSC}:certificates")
 
     juju.wait(deploy_ha_wait_func, timeout=1800)
-    wait_oneshot_finished(
-        juju, unit="transition-tracker/0", service="ubuntu-transition-tracker.service"
-    )
 
 
 @retry(retry_num=24, retry_sleep_sec=5)
 def test_ingress_functions_correctly(juju: jubilant.Juju):
     """Check if the response through haproxy matches the expected content."""
+    wait_oneshot_finished(
+        juju, unit="transition-tracker/0", service="ubuntu-transition-tracker.service"
+    )
+
     model_name = juju.model
     assert model_name is not None
 

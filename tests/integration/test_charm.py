@@ -1,8 +1,6 @@
 # Copyright 2025 Canonical
 # See LICENSE file for licensing details.
 
-import logging
-
 import jubilant
 import requests
 
@@ -10,13 +8,8 @@ from . import APPNAME, retry, wait_oneshot_finished
 
 
 def deploy_wait_func(status):
-    """Wait on juju status until deployed and started."""
-    all_maint = jubilant.all_maintenance(status)
-    started = status.apps[APPNAME].app_status.message == "Starting transition"
-    ready = all_maint and started
-    logging.debug(f"all_maint: {all_maint}")
-    logging.debug(f"started: {started}")
-    return ready
+    """Wait on juju status until the service is active."""
+    return status.apps[APPNAME].app_status.message == "Generating transitions report"
 
 
 def address(juju: jubilant.Juju):
@@ -25,17 +18,17 @@ def address(juju: jubilant.Juju):
 
 
 def test_deploy(juju: jubilant.Juju, transition_tracker_charm):
-    """Deploy the charm via jubilant and wait until it fully completed."""
+    """Deploy the charm via jubilant and wait the service is active."""
     juju.deploy(transition_tracker_charm, app=APPNAME)
     juju.wait(deploy_wait_func, timeout=600)
-    wait_oneshot_finished(
-        juju, unit="transition-tracker/0", service="ubuntu-transition-tracker.service"
-    )
 
 
 @retry(retry_num=10, retry_sleep_sec=3)
 def test_content(juju: jubilant.Juju):
     """Check if the response matches the expected transition page content."""
+    wait_oneshot_finished(
+        juju, unit="transition-tracker/0", service="ubuntu-transition-tracker.service"
+    )
     response = requests.get(f"http://{address(juju)}:80", timeout=15)
     assert response.status_code == 200
     # This is real content, which is dynamic - check header and footer
