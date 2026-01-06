@@ -1,7 +1,7 @@
 # Copyright 2025 Canonical
 # See LICENSE file for licensing details.
 
-"""Representation of the transition service."""
+"""Representation of the transition service!"""
 
 import logging
 import os
