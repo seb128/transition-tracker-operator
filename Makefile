@@ -7,25 +7,21 @@ ALL := $(SRC) $(TESTS)
 export PYTHONPATH = $(PROJECT):$(PROJECT)/lib:$(SRC)
 
 update-dependencies:
-	uv lock -U --no-cache
-
-generate-requirements:
-	uv pip compile -q --no-cache pyproject.toml -o requirements.txt
-	uv pip compile -q --no-cache --all-extras pyproject.toml -o requirements-dev.txt
+	uv lock --upgrade
 
 lint:
-	uv tool run ruff check $(ALL)
-	uv tool run ruff format --check --diff $(ALL)
+	uv run --group lint ruff check $(ALL)
+	uv run --group lint ruff format --check --diff $(ALL)
 
 format:
-	uv tool run ruff check --fix $(ALL)
-	uv tool run ruff format $(ALL)
+	uv run --group lint ruff check --fix $(ALL)
+	uv run --group lint ruff format $(ALL)
 
 static:
-	uv run --all-extras pyright $(ARGS)
+	uv run --group static --group test pyright $(ALL) $(ARGS)
 
 unit:
-	uv run --all-extras \
+	uv run --group test \
 		coverage run \
 		--source=$(SRC) \
 		-m pytest \
@@ -34,10 +30,10 @@ unit:
 		-v \
 		-s \
 		$(ARGS)
-	uv run --all-extras coverage report
+	uv run --group test coverage report
 
 integration:
-	uv run --all-extras \
+	uv run --group test \
 		-m pytest \
 		--tb native \
 		tests/integration \
@@ -55,4 +51,3 @@ clean:
 	rm -rf *.rock
 	rm -rf **/__pycache__
 	rm -rf **/*.egg-info
-	rm -rf requirements*.txt
