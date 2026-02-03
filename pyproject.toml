@@ -30,8 +30,11 @@ log_cli_level = "INFO"
 # Linting tools configuration
 [tool.ruff]
 line-length = 99
-lint.select = ["E", "W", "F", "C", "N", "D", "I001"]
-lint.extend-ignore = [
+extend-exclude = ["__pycache__", "*.egg_info"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "C", "N", "D", "I001"]
+extend-ignore = [
     "D105",
     "D107",
     "D203",
@@ -46,8 +49,7 @@ lint.extend-ignore = [
     "D409",
     "D413",
 ]
-extend-exclude = ["__pycache__", "*.egg_info"]
-lint.per-file-ignores = {"tests/*" = ["D100","D101","D102","D103","D104"]}
+per-file-ignores = {"tests/*" = ["D100","D101","D102","D103","D104"]}
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10
