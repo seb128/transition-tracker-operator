@@ -3,9 +3,9 @@ type: charm
 title: Ubuntu Transition Tracker charm
 summary: Generate Transition reports for Ubuntu
 description: |
-  **Ubuntu Transition Tracker Operator** is a [charm](https://juju.is/charms-architecture)
-  for building transition tracker reports for Ubuntu.
-
+  **Ubuntu Transition Tracker Operator** is the [charm](https://juju.is/charms-architecture)
+  used to generate [https://transitions.ubuntu.com/](https://transitions.ubuntu.com/),
+  a summary page about all the known transitions in the devel series of the Ubuntu archive.
 
 links:
   website:
